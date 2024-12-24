@@ -31,6 +31,7 @@ def get_color_id(r, g, b):
 
 
 try:
+    terminal_width, terminal_height = os.get_terminal_size()
     if not os.path.isfile(video_path):
         print("Failed to find video at:", video_path)
         exit()
@@ -40,10 +41,16 @@ try:
         print("Could not extract frame from video")
         exit()
 
-    ratio = width / frame.shape[1]
-    height = int(frame.shape[0] * ratio) // 2
-    print(frame.shape)
-    print(width, height, ratio)
+    if(terminal_width == 173):
+        width = 173
+        ratio = width / frame.shape[1]
+        height = int(frame.shape[0] * ratio) // 2
+
+    
+    else:
+        ratio = width / frame.shape[1]
+        height = int(frame.shape[0] * ratio) // 2
+
 
     curses.initscr()
     curses.start_color()
@@ -54,6 +61,7 @@ try:
     frame_count = 0
     frames_per_ms = fps / 1000
     start = time.perf_counter_ns() // 1000000
+
     while True:
         done, orig_frame = video.read()
         if not done:
